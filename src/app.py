@@ -42,7 +42,7 @@ X_test_sel = pd.DataFrame(select_model.transform(X_test), columns=X_test.columns
 
 # save the data in the appropriate directory
 X_train_sel['price'] = list(y_train)
-X_test_sel = ['price'] = list(y_test)
+X_test_sel['price'] = list(y_test)
 X_train_sel.to_csv("../data/processed/clean_train.csv", index = False)
 X_test_sel.to_csv("../data/processed/clean_test.csv", index = False)
 
