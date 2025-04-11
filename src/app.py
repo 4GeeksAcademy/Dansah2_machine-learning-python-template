@@ -20,19 +20,18 @@ raw_data = raw_data[raw_data['minimum_nights'] <= 11]
 # keep the data where the calculated_host_listings_count is smaller than 4
 raw_data = raw_data[raw_data['calculated_host_listings_count'] <4]
 
-# scale the data (except for the target variable)
-variables = ['number_of_reviews', 'minimum_nights', 'calculated_host_listings_count', 'availability_365', 'neighbourhood_group', 'room_type']
-scaler = MinMaxScaler()
-scaled_features = scaler.fit_transform(raw_data[variables])
-df_scaled = pd.DataFrame(scaled_features, index=raw_data.index, columns = variables)
-df_scaled['price'] = raw_data['price']
-
 # break up the data into training and testing samples and select the best variables
-X = df_scaled.drop('price', axis = 1)
-y = df_scaled['price']
+X = raw_data[['number_of_reviews', 'minimum_nights', 'calculated_host_listings_count', 'availability_365', 'neighbourhood_group', 'room_type']]
+y = raw_data['price']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+# scale the data
+scaler = MinMaxScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+#select the best 4 features
 select_model = SelectKBest(chi2, k=4)
 select_model.fit(X_train, y_train)
 ix = select_model.get_support()
